@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.admin.core.Processor;
 import de.dk.bininja.admin.core.ProcessorController;
+import de.dk.bininja.admin.entrypoint.ParsedArgs;
 import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
-import de.dk.bininja.admin.ui.cli.Cli;
 import de.dk.bininja.net.Base64Connection;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
@@ -24,39 +24,22 @@ public class MasterControlProgram implements ProcessorController, UIController {
 
    }
 
-   public static void main(String... args) {
-      new MasterControlProgram().start(args);
-   }
-
-   public int start(String... args) {
-      this.ui = new Cli(this);
-
-      String host = "localhost";
-      int port = Base64Connection.PORT;
-
-      if (args != null && args.length > 0) {
-         LOGGER.debug("Parsing arguments");
-         host = args[0];
-         if (args.length > 1) {
-            try {
-               port = Integer.parseInt(args[1]);
-            } catch (NumberFormatException e) {
-               ui.showError("Invalid port: \"" + args[1] + "\" - " + e.getMessage());
-               return 1;
-            }
-         }
-      }
-
-      try {
-         this.processor = new Processor(this, host, port);
-      } catch (IOException e) {
-         ui.showError("Could not connect to " + host + ":" + port + " - " + e.getMessage());
-         return 1;
-      }
-
+   public void start(Processor processor, UI ui, ParsedArgs args) {
       LOGGER.debug("BiNinjaAdmin tool initialized and ready for action.");
+      this.processor = processor;
+      this.ui = ui;
+
+      String host = args.getHost();
+      int port = args.getPort()
+                     .orElse(Base64Connection.PORT);
+      try {
+         processor.start(host, port);
+      } catch (IOException e) {
+         System.out.println("Could not connect to " + host + ":" + port + " - " + e.getMessage());
+         System.exit(1);
+         return;
+      }
       ui.start();
-      return 0;
    }
 
    @Override

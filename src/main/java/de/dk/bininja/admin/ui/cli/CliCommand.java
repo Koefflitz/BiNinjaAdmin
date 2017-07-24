@@ -32,6 +32,10 @@ public abstract class CliCommand {
       return null;
    }
 
+   public static CliCommand[] values() {
+      return commands.toArray(new CliCommand[commands.size()]);
+   }
+
    public boolean matches(String input) {
       return input.matches(regex);
    }

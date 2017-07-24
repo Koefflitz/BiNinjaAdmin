@@ -24,16 +24,19 @@ public class Processor implements Receiver, ConnectionListener {
    private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class);
 
    private final ProcessorController controller;
-   private final Base64Connection connection;
+   private Base64Connection connection;
 
    private AdminPacket result;
 
-   public Processor(ProcessorController controller, String host, int port) throws UnknownHostException, IOException {
+   public Processor(ProcessorController controller) {
+      this.controller = controller;
+   }
+
+   public void start(String host, int port) throws UnknownHostException, IOException {
       this.connection = new Base64Connection(host, port, this);
       connection.sendRaw(ConnectionType.ADMIN.getString());
       connection.addListener(this);
       connection.start();
-      this.controller = controller;
    }
 
    public int countConnectedClients(ConnectionType connectionType) throws IOException,

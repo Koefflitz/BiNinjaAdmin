@@ -17,6 +17,10 @@ public class Cli implements UI {
 
    private static final long DEFAULT_READ_INTERVAL = 128;
 
+   private static final String HELP = "help";
+
+   private static final String SHORT_HELP = "h";
+
    private final UIController controller;
    private final BufferedReader in;
    private long readInterval = DEFAULT_READ_INTERVAL;
@@ -27,6 +31,10 @@ public class Cli implements UI {
    public Cli(UIController controller) {
       this.controller = controller;
       this.in = new BufferedReader(new InputStreamReader(System.in));
+   }
+
+   private static boolean isHelp(String input) {
+      return input.equals(HELP) || input.equals(SHORT_HELP);
    }
 
    @Override
@@ -51,9 +59,14 @@ public class Cli implements UI {
             break;
          }
 
+         if (isHelp(input)) {
+            printHelp();
+            continue;
+         }
          CliCommand cmd = CliCommand.parse(input);
          if (cmd == null) {
             System.out.println("Command " + input + " not found.");
+            System.out.println("Type h or help to get some help.");
             continue;
          }
 
@@ -77,6 +90,14 @@ public class Cli implements UI {
       System.out.println(result.getMessage());
       if (!result.worked())
          cmd.printUsage();
+   }
+
+   private void printHelp() {
+      System.out.println("This tool expects one of the following commands:");
+      for (CliCommand cmd : CliCommand.values()) {
+         System.out.println();
+         cmd.printUsage();
+      }
    }
 
    @Override
