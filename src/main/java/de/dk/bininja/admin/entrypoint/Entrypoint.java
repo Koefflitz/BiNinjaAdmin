@@ -11,14 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.admin.controller.MasterControlProgram;
-import de.dk.bininja.admin.core.Processor;
+import de.dk.bininja.admin.core.Logic;
 import de.dk.bininja.admin.ui.cli.Cli;
 import de.dk.util.StringUtils;
 import de.dk.util.opt.ArgumentModel;
 import de.dk.util.opt.ArgumentParser;
 import de.dk.util.opt.ArgumentParserBuilder;
-import de.dk.util.opt.ex.MissingArgumentException;
-import de.dk.util.opt.ex.MissingOptionValueException;
+import de.dk.util.opt.ex.ArgumentParseException;
 
 public class Entrypoint {
    private static final Logger LOGGER = LoggerFactory.getLogger(Entrypoint.class);
@@ -40,7 +39,7 @@ public class Entrypoint {
       ParsedArgs parsedArgs;
       try {
          parsedArgs = parseArguments(args);
-      } catch (MissingArgumentException | MissingOptionValueException | InvalidArgumentException e) {
+      } catch (ArgumentParseException e) {
          String argsString = Stream.<String>of(args)
                                    .reduce((a, b) -> a + " " + b)
                                    .orElse("");
@@ -51,12 +50,10 @@ public class Entrypoint {
       }
 
       MasterControlProgram mcp = new MasterControlProgram();
-      mcp.start(new Processor(mcp), new Cli(mcp), parsedArgs);
+      mcp.start(new Logic(mcp), new Cli(mcp), parsedArgs);
    }
 
-   private static ParsedArgs parseArguments(String... args) throws MissingArgumentException,
-                                                                  MissingOptionValueException,
-                                                                  InvalidArgumentException {
+   private static ParsedArgs parseArguments(String... args) throws ArgumentParseException {
       LOGGER.debug("Parsing arguments");
       ArgumentParserBuilder builder = new ArgumentParserBuilder();
       for (Argument arg : Argument.values())
@@ -65,7 +62,7 @@ public class Entrypoint {
       for (Option opt : Option.values())
          opt.build(builder);
 
-      ArgumentParser parser = builder.build();
+      ArgumentParser parser = builder.buildAndGet();
 
       if (parser.isHelp(args)) {
          parser.printUsage(System.out);

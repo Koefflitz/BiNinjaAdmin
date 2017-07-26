@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.dk.bininja.admin.core.Processor;
-import de.dk.bininja.admin.core.ProcessorController;
+import de.dk.bininja.admin.core.Logic;
+import de.dk.bininja.admin.core.LogicController;
 import de.dk.bininja.admin.entrypoint.ParsedArgs;
 import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
@@ -14,17 +14,17 @@ import de.dk.bininja.net.Base64Connection;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
 
-public class MasterControlProgram implements ProcessorController, UIController {
+public class MasterControlProgram implements LogicController, UIController {
    private static final Logger LOGGER = LoggerFactory.getLogger(MasterControlProgram.class);
 
-   private Processor processor;
+   private Logic processor;
    private UI ui;
 
    public MasterControlProgram() {
 
    }
 
-   public void start(Processor processor, UI ui, ParsedArgs args) {
+   public void start(Logic processor, UI ui, ParsedArgs args) {
       LOGGER.debug("BiNinjaAdmin tool initialized and ready for action.");
       this.processor = processor;
       this.ui = ui;

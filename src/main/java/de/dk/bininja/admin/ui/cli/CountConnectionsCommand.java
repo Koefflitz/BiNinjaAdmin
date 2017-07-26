@@ -9,13 +9,13 @@ import de.dk.bininja.net.ConnectionType;
 
 public class CountConnectionsCommand extends CliCommand {
    private static final String NAME = "count-connections";
-   private static final String REGEX = "^count-connections( -(" + connectionTypesWithPipes() + "))?$";
+   private static final String REGEX = "^" + NAME + "( -(" + connectionTypesWithPipes() + "))?$";
 
    protected CountConnectionsCommand() {
       super(NAME, REGEX);
    }
 
-   private static String connectionTypesWithPipes(UnaryOperator<String> extender) {
+   public static String connectionTypesWithPipes(UnaryOperator<String> extender) {
       return Arrays.stream(ConnectionType.values())
                    .map(ConnectionType::getString)
                    .map(extender)
@@ -23,7 +23,7 @@ public class CountConnectionsCommand extends CliCommand {
                    .get();
    }
 
-   private static String connectionTypesWithPipes() {
+   public static String connectionTypesWithPipes() {
       return connectionTypesWithPipes(UnaryOperator.identity());
    }
 

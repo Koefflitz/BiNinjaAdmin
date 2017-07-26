@@ -20,15 +20,15 @@ import de.dk.util.net.ConnectionListener;
 import de.dk.util.net.ReadingException;
 import de.dk.util.net.Receiver;
 
-public class Processor implements Receiver, ConnectionListener {
-   private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class);
+public class Logic implements Receiver, ConnectionListener {
+   private static final Logger LOGGER = LoggerFactory.getLogger(Logic.class);
 
-   private final ProcessorController controller;
+   private final LogicController controller;
    private Base64Connection connection;
 
    private AdminPacket result;
 
-   public Processor(ProcessorController controller) {
+   public Logic(LogicController controller) {
       this.controller = controller;
    }
 
