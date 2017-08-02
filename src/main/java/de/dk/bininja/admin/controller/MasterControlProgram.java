@@ -1,6 +1,7 @@
 package de.dk.bininja.admin.controller;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,22 @@ public class MasterControlProgram implements LogicController, UIController {
       String host = args.getHost();
       int port = args.getPort()
                      .orElse(Base64Connection.PORT);
-      try {
-         processor.start(host, port);
-      } catch (IOException e) {
-         System.out.println("Could not connect to " + host + ":" + port + " - " + e.getMessage());
-         System.exit(1);
-         return;
+      if (host != null) {
+         try {
+            connect(host, port);
+         } catch (IOException e) {
+            System.out.println("Could not connect to " + host + ":" + port + " - " + e.getMessage());
+            System.exit(1);
+            return;
+         }
       }
       ui.start();
+   }
+
+   @Override
+   public void connect(String host, int port) throws UnknownHostException, IOException {
+      processor.start(host, port);
+      ui.setConnected(true);
    }
 
    @Override

@@ -3,8 +3,6 @@ package de.dk.bininja.admin.entrypoint;
 import static de.dk.bininja.admin.entrypoint.Argument.HOST;
 import static de.dk.bininja.admin.entrypoint.Option.PORT;
 
-import java.util.Optional;
-import java.util.Scanner;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import de.dk.bininja.admin.controller.MasterControlProgram;
 import de.dk.bininja.admin.core.Logic;
 import de.dk.bininja.admin.ui.cli.Cli;
-import de.dk.util.StringUtils;
 import de.dk.util.opt.ArgumentModel;
 import de.dk.util.opt.ArgumentParser;
 import de.dk.util.opt.ArgumentParserBuilder;
@@ -21,18 +18,9 @@ import de.dk.util.opt.ex.ArgumentParseException;
 
 public class Entrypoint {
    private static final Logger LOGGER = LoggerFactory.getLogger(Entrypoint.class);
-   private static final String EXIT = "exit";
-   private static Scanner scanner;
 
    public Entrypoint() {
 
-   }
-
-   private static Scanner getScanner() {
-      if (scanner == null)
-         scanner = new Scanner(System.in);
-
-      return scanner;
    }
 
    public static void main(String[] args) {
@@ -72,11 +60,8 @@ public class Entrypoint {
       ParsedArgs arguments = new ParsedArgs();
 
       // host
-      Optional<String> host = result.getOptionalArgumentValue(HOST.getName());
-      if (host.isPresent())
-         arguments.setHost(host.get());
-      else
-         arguments.setHost(prompt("Please specifiy a host to connect to: "));
+      result.getOptionalArgumentValue(HOST.getName())
+            .ifPresent(arguments::setHost);
 
       // port
       if (result.isOptionPresent(PORT.getKey())) {
@@ -93,16 +78,6 @@ public class Entrypoint {
       }
 
       return arguments;
-   }
-
-   private static String prompt(String msg) {
-      System.out.println(msg);
-      Scanner scanner = getScanner();
-      String input = scanner.nextLine();
-      if (StringUtils.isBlank(input) || input.equals(EXIT))
-         System.exit(1);
-
-      return input;
    }
 
 }

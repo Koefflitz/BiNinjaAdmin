@@ -104,6 +104,9 @@ public class Logic implements Receiver, ConnectionListener {
    }
 
    public void close() throws InterruptedException {
+      if (connection == null)
+         return;
+
       connection.removeListener(this);
       if (connection.isRunning()) {
          LOGGER.debug("Closing the connection to the server");

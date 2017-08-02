@@ -9,11 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
+import de.dk.bininja.net.Base64Connection;
+import de.dk.util.StringUtils;
 
 public class Cli implements UI {
    private static final Logger LOGGER = LoggerFactory.getLogger(Cli.class);
 
-   private static final String PROMPT = "BiNinjaServer>";
+   private static final String PROMPT_NOT_CONNECTED = "BiNinja (n.c.)>";
+   private static final String PROMPT_CONNECTED = "BiNinjaServer>";
 
    private static final long DEFAULT_READ_INTERVAL = 128;
 
@@ -25,6 +28,8 @@ public class Cli implements UI {
    private final BufferedReader in;
    private long readInterval = DEFAULT_READ_INTERVAL;
    private Thread runningThread;
+
+   private boolean connected;
 
    private boolean running;
 
@@ -41,15 +46,16 @@ public class Cli implements UI {
    public void start() {
       running = true;
       this.runningThread = Thread.currentThread();
+
+      if (!connected) {
+         if (!connect())
+            controller.exit();
+      }
+
       while (running) {
-         System.out.print(PROMPT);
          String input;
          try {
-            while (!in.ready())
-               Thread.sleep(readInterval);
-
-            input = in.readLine()
-                      .trim();
+            input = prompt();
          } catch (IOException | InterruptedException e) {
             if (running) {
                System.err.println("Input was closed unexpectedly... ");
@@ -73,6 +79,69 @@ public class Cli implements UI {
          handle(cmd, input);
       }
       System.out.println("BiNinja admintool out.");
+   }
+
+   private boolean connect() {
+      System.out.println("Not connected. Starting connect procedure.");
+      System.out.println("Please enter the host to connect to");
+      String host;
+      try {
+         host = caughtPrompt();
+      } catch (IOException | InterruptedException e) {
+         return false;
+      }
+
+      System.out.println("Now enter a port (or just enter for default port " + Base64Connection.PORT + "): ");
+      String portString;
+      try {
+         portString = caughtPrompt();
+      } catch (IOException | InterruptedException e) {
+         return false;
+      }
+      int port;
+      if (StringUtils.isBlank(portString)) {
+         port = Base64Connection.PORT;
+      } else {
+         try {
+            port = Integer.parseInt(portString);
+         } catch (NumberFormatException e) {
+            System.out.println(portString + " is not a valid port.");
+            return false;
+         }
+      }
+      try {
+         controller.connect(host, port);
+      } catch (IOException e) {
+         System.out.println("Could not connect to " + host + ":" + port);
+         System.out.println(e.getMessage());
+         return false;
+      }
+      return true;
+   }
+
+   private String prompt() throws IOException, InterruptedException {
+      System.out.print(connected ? PROMPT_CONNECTED : PROMPT_NOT_CONNECTED);
+      while (!in.ready())
+         Thread.sleep(readInterval);
+
+      String input = in.readLine();
+      if (input == null)
+         throw new IOException("End of stream has been reached.");
+
+      return input.trim();
+   }
+
+   private String caughtPrompt() throws IOException, InterruptedException {
+      try {
+         return prompt();
+      } catch (IOException | InterruptedException e) {
+         if (running) {
+            System.err.println("Input was closed unexpectedly... ");
+            e.printStackTrace(System.err);
+            running = false;
+         }
+         throw e;
+      }
    }
 
    private void handle(CliCommand cmd, String input) {
@@ -116,6 +185,11 @@ public class Cli implements UI {
 
    public void setReadInterval(long readInterval) {
       this.readInterval = readInterval;
+   }
+
+   @Override
+   public void setConnected(boolean connected) {
+      this.connected = connected;
    }
 
    public boolean isRunning() {

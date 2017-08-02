@@ -14,7 +14,8 @@ public class ReadConnectionsCommand extends CliCommand {
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException,
+                                                                                           InterruptedException {
       // TODO Methode implementieren
       throw new NotImplementedException();
    }
