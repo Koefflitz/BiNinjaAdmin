@@ -9,7 +9,7 @@ import de.dk.bininja.net.ConnectionType;
 
 public class CountConnectionsCommand extends CliCommand {
    private static final String NAME = "count-connections";
-   private static final String REGEX = "^" + NAME + "( -(" + connectionTypesWithPipes() + "))?$";
+   private static final String REGEX = "^" + NAME + "( (" + connectionTypesWithPipes() + "))?$";
 
    protected CountConnectionsCommand() {
       super(NAME, REGEX);
@@ -27,20 +27,30 @@ public class CountConnectionsCommand extends CliCommand {
       return connectionTypesWithPipes(UnaryOperator.identity());
    }
 
-   @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   public static ConnectionType extractType(String input, String commandName) throws IllegalArgumentException {
       ConnectionType type;
-      if (input.equals(NAME)) {
+      if (input.equals(commandName)) {
          type = ConnectionType.ALL;
       } else {
-         String param = input.substring(NAME.length() + 2);
+         String param = input.substring(commandName.length() + 1);
          if (param.charAt(param.length() - 1) == ')')
             param = param.substring(0, param.length() - 1);
 
          type = ConnectionType.parse(param);
 
          if (type == null)
-            return new CliCommandResult(false, "Invalid connectionType: " + param);
+            throw new IllegalArgumentException("Invalid connectionType: " + param);
+      }
+      return type;
+   }
+
+   @Override
+   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+      ConnectionType type;
+      try {
+         type = extractType(input, name);
+      } catch (IllegalArgumentException e) {
+         return new CliCommandResult(false, e.getMessage());
       }
 
       int result = controller.countConnectedClients(type);
@@ -50,7 +60,7 @@ public class CountConnectionsCommand extends CliCommand {
 
    @Override
    public void printUsage() {
-      String synopsis = "count-connections [" + connectionTypesWithPipes(t -> "-" + t) + "]";
+      String synopsis = "count-connections [" + connectionTypesWithPipes() + "]";
       System.out.println(synopsis);
       System.out.println("Get the number of the currently connected clients of a type (or all).");
       System.out.println("With no option given, all connections will be counted.");

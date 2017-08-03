@@ -12,6 +12,7 @@ public abstract class CliCommand {
    public static final SetBufferSizeCommand SET_BUFFER_SIZE = new SetBufferSizeCommand();
    public static final ReadBuffersizeCommand READ_BUFFERSIZE = new ReadBuffersizeCommand();
    public static final CountConnectionsCommand COUNT_CONNECTIONS = new CountConnectionsCommand();
+   public static final ReadConnectionsCommand READ_CONNECTIONS = new ReadConnectionsCommand();
    public static final ShutdownCommand SHUTDOWN = new ShutdownCommand();
    public static final ExitCommand EXIT = new ExitCommand();
 

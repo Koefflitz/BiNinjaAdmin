@@ -2,6 +2,7 @@ package de.dk.bininja.admin.controller;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import de.dk.bininja.admin.entrypoint.ParsedArgs;
 import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.net.Base64Connection;
+import de.dk.bininja.net.ConnectionDetails;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
 
@@ -54,6 +56,11 @@ public class MasterControlProgram implements LogicController, UIController {
    @Override
    public int countConnectedClients(ConnectionType connectionType) throws IOException, InterruptedException {
       return processor.countConnectedClients(connectionType);
+   }
+
+   @Override
+   public Collection<ConnectionDetails> readConnectionDetailsOf(ConnectionType type) throws IOException, InterruptedException {
+      return processor.readConnectionDetailsOf(type);
    }
 
    @Override

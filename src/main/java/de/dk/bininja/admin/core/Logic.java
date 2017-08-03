@@ -2,15 +2,18 @@ package de.dk.bininja.admin.core;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.net.Base64Connection;
+import de.dk.bininja.net.ConnectionDetails;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.AdminPacket;
 import de.dk.bininja.net.packet.admin.AdminPacket.AdminPacketType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
+import de.dk.bininja.net.packet.admin.ConnectionDetailsPacket;
 import de.dk.bininja.net.packet.admin.CountConnectionsPacket;
 import de.dk.bininja.net.packet.admin.CountConnectionsResultPacket;
 import de.dk.bininja.net.packet.admin.ReadBufferSizePacket;
@@ -41,8 +44,16 @@ public class Logic implements Receiver, ConnectionListener {
 
    public int countConnectedClients(ConnectionType connectionType) throws IOException,
                                                                           InterruptedException {
-      CountConnectionsResultPacket result = request(new CountConnectionsPacket(connectionType), CountConnectionsResultPacket.class);
+      CountConnectionsResultPacket result = request(new CountConnectionsPacket(connectionType),
+                                                    CountConnectionsResultPacket.class);
       return result.getCount();
+   }
+
+   public Collection<ConnectionDetails> readConnectionDetailsOf(ConnectionType type) throws IOException,
+                                                                                            InterruptedException {
+      ConnectionDetailsPacket result = request(new ConnectionDetailsPacket(type),
+                                               ConnectionDetailsPacket.class);
+      return result.getConnectionDetails();
    }
 
    public int readBufferSize() throws IOException, InterruptedException {
