@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.admin.controller.MasterControlProgram;
 import de.dk.bininja.admin.core.Logic;
-import de.dk.bininja.admin.ui.cli.Cli;
+import de.dk.bininja.admin.ui.cli.AdminCli;
 import de.dk.util.opt.ArgumentModel;
 import de.dk.util.opt.ArgumentParser;
 import de.dk.util.opt.ArgumentParserBuilder;
@@ -38,7 +38,7 @@ public class Entrypoint {
       }
 
       MasterControlProgram mcp = new MasterControlProgram();
-      mcp.start(new Logic(mcp), new Cli(mcp), parsedArgs);
+      mcp.start(new Logic(mcp), new AdminCli(mcp), parsedArgs);
    }
 
    private static ParsedArgs parseArguments(String... args) throws ArgumentParseException {

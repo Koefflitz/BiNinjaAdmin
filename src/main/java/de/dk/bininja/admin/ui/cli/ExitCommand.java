@@ -3,8 +3,10 @@ package de.dk.bininja.admin.ui.cli;
 import java.io.IOException;
 
 import de.dk.bininja.admin.ui.UIController;
+import de.dk.bininja.ui.cli.CliCommand;
+import de.dk.bininja.ui.cli.CliCommandResult;
 
-public class ExitCommand extends CliCommand {
+public class ExitCommand extends CliCommand<UIController> {
    private static final String NAME = "exit";
 
    protected ExitCommand() {

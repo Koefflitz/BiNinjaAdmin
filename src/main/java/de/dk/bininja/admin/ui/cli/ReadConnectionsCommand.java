@@ -6,8 +6,10 @@ import java.util.Collection;
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.net.ConnectionDetails;
 import de.dk.bininja.net.ConnectionType;
+import de.dk.bininja.ui.cli.CliCommand;
+import de.dk.bininja.ui.cli.CliCommandResult;
 
-public class ReadConnectionsCommand extends CliCommand {
+public class ReadConnectionsCommand extends CliCommand<UIController> {
    private static final String NAME = "read-connection-details";
    private static final String REGEX = "^" + NAME + "( (" + CountConnectionsCommand.connectionTypesWithPipes() + "))?$";
 

@@ -6,8 +6,10 @@ import java.util.function.UnaryOperator;
 
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.net.ConnectionType;
+import de.dk.bininja.ui.cli.CliCommand;
+import de.dk.bininja.ui.cli.CliCommandResult;
 
-public class CountConnectionsCommand extends CliCommand {
+public class CountConnectionsCommand extends CliCommand<UIController> {
    private static final String NAME = "count-connections";
    private static final String REGEX = "^" + NAME + "( (" + connectionTypesWithPipes() + "))?$";
 
