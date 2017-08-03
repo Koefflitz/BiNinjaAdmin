@@ -103,7 +103,7 @@ public class Logic implements Receiver, ConnectionListener {
 
    @Override
    public void closed() {
-      controller.showMessage("Verbindung zum Server verloren.");
+      controller.show("Verbindung zum Server verloren.");
       controller.exit();
    }
 

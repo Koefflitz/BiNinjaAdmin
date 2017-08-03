@@ -90,12 +90,12 @@ public class MasterControlProgram implements LogicController, UIController {
    }
 
    @Override
-   public void showMessage(String msg) {
-      ui.showMessage(msg);
+   public void show(String msg, Object... args) {
+      ui.show(msg);
    }
 
    @Override
-   public void showError(String msg) {
+   public void showError(String msg, Object... args) {
       ui.showError(msg);
    }
 }
