@@ -1,7 +1,6 @@
 package de.dk.bininja.admin.core;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Collection;
 
 import org.slf4j.Logger;
@@ -9,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.net.Base64Connection;
 import de.dk.bininja.net.ConnectionDetails;
+import de.dk.bininja.net.ConnectionRefusedException;
+import de.dk.bininja.net.ConnectionRequest;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.AdminPacket;
 import de.dk.bininja.net.packet.admin.AdminPacket.AdminPacketType;
@@ -30,6 +31,8 @@ import de.dk.util.net.Receiver;
 public class Logic implements Receiver, ConnectionListener {
    private static final Logger LOGGER = LoggerFactory.getLogger(Logic.class);
 
+   private static final long CONNECT_TIMEOUT = 0;
+
    private final LogicController controller;
    private Base64Connection connection;
 
@@ -39,11 +42,15 @@ public class Logic implements Receiver, ConnectionListener {
       this.controller = controller;
    }
 
-   public void start(String host, int port) throws UnknownHostException, IOException {
-      this.connection = new Base64Connection(host, port, this);
-      connection.sendRaw(ConnectionType.ADMIN.getString());
+   public void start(String host, int port) throws IOException, ConnectionRefusedException {
+      ConnectionRequest request = new ConnectionRequest(host, port);
+      try {
+         this.connection = request.request(ConnectionType.ADMIN, CONNECT_TIMEOUT);
+      } catch (InterruptedException e) {
+         throw new IOException("Interrupted while establishing connection", e);
+      }
       connection.addListener(this);
-      connection.start();
+      connection.setReceiver(this);
    }
 
    public int countConnectedClients(ConnectionType connectionType) throws IOException,

@@ -1,7 +1,6 @@
 package de.dk.bininja.admin.controller;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Collection;
 
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.net.Base64Connection;
 import de.dk.bininja.net.ConnectionDetails;
+import de.dk.bininja.net.ConnectionRefusedException;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
 
@@ -42,7 +42,7 @@ public class MasterControlProgram implements LogicController, UIController {
       if (host != null) {
          try {
             connect(host, port);
-         } catch (IOException e) {
+         } catch (IOException | ConnectionRefusedException e) {
             System.out.println("Could not connect to " + host + ":" + port + " - " + e.getMessage());
             System.exit(1);
             return;
@@ -52,7 +52,7 @@ public class MasterControlProgram implements LogicController, UIController {
    }
 
    @Override
-   public void connect(String host, int port) throws UnknownHostException, IOException {
+   public void connect(String host, int port) throws IOException, ConnectionRefusedException {
       processor.start(host, port);
       ui.setConnected(true);
    }
