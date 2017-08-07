@@ -3,6 +3,10 @@ package de.dk.bininja.admin.entrypoint;
 import de.dk.bininja.net.Base64Connection;
 import de.dk.util.opt.ArgumentParserBuilder;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public enum Option {
    PORT('p', "port", "The port to connect on. Default is " + Base64Connection.PORT, true);
 

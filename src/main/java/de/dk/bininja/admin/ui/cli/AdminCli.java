@@ -8,6 +8,10 @@ import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.ui.cli.Cli;
 import de.dk.bininja.ui.cli.CliCommand;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public class AdminCli extends Cli<UIController> implements UI {
    private static final String PROMPT_NOT_CONNECTED = "BiNinja (n.c.)>";
    private static final String PROMPT_CONNECTED = "BiNinjaServer>";

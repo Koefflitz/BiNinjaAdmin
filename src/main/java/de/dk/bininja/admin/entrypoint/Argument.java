@@ -2,6 +2,10 @@ package de.dk.bininja.admin.entrypoint;
 
 import de.dk.util.opt.ArgumentParserBuilder;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public enum Argument {
    HOST("host", "The host to connect to.", false);
 

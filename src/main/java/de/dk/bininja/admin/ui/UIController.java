@@ -8,6 +8,10 @@ import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
 import de.dk.bininja.ui.cli.CliController;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public interface UIController extends CliController {
    public int countConnectedClients(ConnectionType connectionType) throws IOException, InterruptedException;
    public Collection<ConnectionDetails> readConnectionDetailsOf(ConnectionType type) throws IOException, InterruptedException;

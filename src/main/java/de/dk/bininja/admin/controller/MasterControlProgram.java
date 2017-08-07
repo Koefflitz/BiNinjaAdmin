@@ -17,6 +17,10 @@ import de.dk.bininja.net.ConnectionDetails;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public class MasterControlProgram implements LogicController, UIController {
    private static final Logger LOGGER = LoggerFactory.getLogger(MasterControlProgram.class);
 

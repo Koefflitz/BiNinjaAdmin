@@ -6,6 +6,10 @@ import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.ui.cli.CliCommand;
 import de.dk.bininja.ui.cli.CliCommandResult;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public class ShutdownCommand extends CliCommand<UIController> {
    private static final String NAME = "shutdown";
 

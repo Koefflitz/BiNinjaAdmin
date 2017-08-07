@@ -2,6 +2,10 @@ package de.dk.bininja.admin.entrypoint;
 
 import de.dk.util.opt.ex.ArgumentParseException;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public class InvalidArgumentException extends ArgumentParseException {
 
    private static final long serialVersionUID = 126652555748006069L;

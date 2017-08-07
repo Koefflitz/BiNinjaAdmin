@@ -7,6 +7,10 @@ import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
 import de.dk.bininja.ui.cli.CliCommand;
 import de.dk.bininja.ui.cli.CliCommandResult;
 
+/**
+ * @author David Koettlitz
+ * <br>Erstellt am 07.08.2017
+ */
 public class SetBufferSizeCommand extends CliCommand<UIController> {
    private static final String NAME = "set-buffer-size";
    private static final String REGEX = "^set-buffer-size [0-9]+$";
