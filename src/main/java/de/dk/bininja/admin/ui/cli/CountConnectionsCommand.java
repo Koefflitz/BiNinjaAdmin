@@ -18,7 +18,7 @@ public class CountConnectionsCommand extends CliCommand<UIController> {
    private static final String REGEX = "^" + NAME + "( (" + connectionTypesWithPipes() + "))?$";
 
    protected CountConnectionsCommand() {
-      super(NAME, REGEX);
+      super(NAME);
    }
 
    public static String connectionTypesWithPipes(UnaryOperator<String> extender) {
@@ -51,7 +51,11 @@ public class CountConnectionsCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws IOException,
+                                                                                    InterruptedException {
+      if (!input.matches(REGEX))
+         return new CliCommandResult(false, "Wrong Syntax of command " + name);
+
       ConnectionType type;
       try {
          type = extractType(input, name);

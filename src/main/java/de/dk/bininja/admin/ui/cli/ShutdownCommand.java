@@ -14,11 +14,12 @@ public class ShutdownCommand extends CliCommand<UIController> {
    private static final String NAME = "shutdown";
 
    public ShutdownCommand() {
-      super(NAME, NAME);
+      super(NAME);
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws IOException,
+                                                                                    InterruptedException {
       controller.shutdownServer();
       return new CliCommandResult(true, "Server shutdown initiated...");
    }

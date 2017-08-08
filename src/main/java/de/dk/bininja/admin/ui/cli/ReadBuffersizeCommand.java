@@ -14,11 +14,12 @@ public class ReadBuffersizeCommand extends CliCommand<UIController> {
    private static final String NAME = "read-buffer-size";
 
    public ReadBuffersizeCommand() {
-      super(NAME, NAME);
+      super(NAME);
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws IOException,
+                                                                                    InterruptedException {
       int bufferSize = controller.readBufferSize();
       String msg = "buffer-size=" + bufferSize;
       return new CliCommandResult(true, msg);

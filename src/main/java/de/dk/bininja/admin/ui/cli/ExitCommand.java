@@ -14,11 +14,12 @@ public class ExitCommand extends CliCommand<UIController> {
    private static final String NAME = "exit";
 
    protected ExitCommand() {
-      super(NAME, NAME);
+      super(NAME);
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws IOException,
+                                                                                    InterruptedException {
       controller.exit();
       return new CliCommandResult(true, "Exiting the BiNinja admintool.");
    }

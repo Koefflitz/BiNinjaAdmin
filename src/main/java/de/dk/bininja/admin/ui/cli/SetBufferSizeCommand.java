@@ -16,11 +16,15 @@ public class SetBufferSizeCommand extends CliCommand<UIController> {
    private static final String REGEX = "^set-buffer-size [0-9]+$";
 
    protected SetBufferSizeCommand() {
-      super(NAME, REGEX);
+      super(NAME);
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException, InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws IOException,
+                                                                                    InterruptedException {
+      if (!input.matches(REGEX))
+         return new CliCommandResult(false, "Wrong Syntax of command " + name);
+
       String value = input.substring(NAME.length() + 1);
       int bufferSize;
       try {

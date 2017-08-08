@@ -18,12 +18,15 @@ public class ReadConnectionsCommand extends CliCommand<UIController> {
    private static final String REGEX = "^" + NAME + "( (" + CountConnectionsCommand.connectionTypesWithPipes() + "))?$";
 
    public ReadConnectionsCommand() {
-      super(NAME, REGEX);
+      super(NAME);
    }
 
    @Override
-   protected CliCommandResult checkedExecute(String input, UIController controller) throws IOException,
-                                                                                           InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws IOException,
+                                                                                    InterruptedException {
+      if (!input.matches(REGEX))
+         return new CliCommandResult(false, "Wrong Syntax of command " + name);
+
       ConnectionType type;
       try {
          type = CountConnectionsCommand.extractType(input, name);
