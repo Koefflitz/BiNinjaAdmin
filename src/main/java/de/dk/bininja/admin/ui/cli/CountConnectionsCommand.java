@@ -51,8 +51,7 @@ public class CountConnectionsCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult execute(String input, UIController controller) throws IOException,
-                                                                                    InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws InterruptedException {
       if (!input.matches(REGEX))
          return new CliCommandResult(false, "Wrong Syntax of command " + name);
 
@@ -63,7 +62,12 @@ public class CountConnectionsCommand extends CliCommand<UIController> {
          return new CliCommandResult(false, e.getMessage());
       }
 
-      int result = controller.countConnectedClients(type);
+      int result;
+      try {
+         result = controller.countConnectedClients(type);
+      } catch (IOException e) {
+         return new CliCommandResult(true, "Could not get connection count from server.\n" + e.getMessage());
+      }
 
       return new CliCommandResult(true, type.getDescription() + " connection count: " + result);
    }

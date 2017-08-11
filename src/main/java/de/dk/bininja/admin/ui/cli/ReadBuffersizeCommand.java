@@ -18,9 +18,13 @@ public class ReadBuffersizeCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult execute(String input, UIController controller) throws IOException,
-                                                                                    InterruptedException {
-      int bufferSize = controller.readBufferSize();
+   protected CliCommandResult execute(String input, UIController controller) throws InterruptedException {
+      int bufferSize;
+      try {
+         bufferSize = controller.readBufferSize();
+      } catch (IOException e) {
+         return new CliCommandResult(true, "Could not read the buffersize from the server.\n" + e.getMessage());
+      }
       String msg = "buffer-size=" + bufferSize;
       return new CliCommandResult(true, msg);
    }

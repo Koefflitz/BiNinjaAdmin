@@ -1,7 +1,5 @@
 package de.dk.bininja.admin.ui.cli;
 
-import java.io.IOException;
-
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.ui.cli.CliCommand;
 import de.dk.bininja.ui.cli.CliCommandResult;
@@ -18,8 +16,7 @@ public class ExitCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult execute(String input, UIController controller) throws IOException,
-                                                                                    InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws InterruptedException {
       controller.exit();
       return new CliCommandResult(true, "Exiting the BiNinja admintool.");
    }

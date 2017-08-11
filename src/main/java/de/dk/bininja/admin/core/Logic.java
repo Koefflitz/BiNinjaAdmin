@@ -88,6 +88,7 @@ public class Logic implements Receiver, ConnectionListener {
       try {
          connection.send(request);
       } catch (ChannelClosedException | IllegalArgumentException e) {
+         LOGGER.error("Error sending adminpacket " + request + " to the server.", e);
          throw new IOException(e);
       }
 

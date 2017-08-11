@@ -20,8 +20,7 @@ public class SetBufferSizeCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult execute(String input, UIController controller) throws IOException,
-                                                                                    InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws InterruptedException {
       if (!input.matches(REGEX))
          return new CliCommandResult(false, "Wrong Syntax of command " + name);
 
@@ -35,7 +34,12 @@ public class SetBufferSizeCommand extends CliCommand<UIController> {
          return new CliCommandResult(false, "Invalid buffersize: " + value + " - " + e.getMessage());
       }
 
-      BooleanAnswerPacket result = controller.setBufferSize(bufferSize);
+      BooleanAnswerPacket result;
+      try {
+         result = controller.setBufferSize(bufferSize);
+      } catch (IOException e) {
+         return new CliCommandResult(true, "Could not set the buffer size on the server.\n" + e.getMessage());
+      }
       if (result.getResult())
          return new CliCommandResult(true, "Buffer size set to " + bufferSize);
       else

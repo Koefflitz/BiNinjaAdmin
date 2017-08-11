@@ -18,9 +18,12 @@ public class ShutdownCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult execute(String input, UIController controller) throws IOException,
-                                                                                    InterruptedException {
-      controller.shutdownServer();
+   protected CliCommandResult execute(String input, UIController controller) throws InterruptedException {
+      try {
+         controller.shutdownServer();
+      } catch (IOException e) {
+         return new CliCommandResult(true, "Could not shutdown the server.\n" + e.getMessage());
+      }
       return new CliCommandResult(true, "Server shutdown initiated...");
    }
 

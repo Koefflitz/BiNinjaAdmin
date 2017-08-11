@@ -22,8 +22,7 @@ public class ReadConnectionsCommand extends CliCommand<UIController> {
    }
 
    @Override
-   protected CliCommandResult execute(String input, UIController controller) throws IOException,
-                                                                                    InterruptedException {
+   protected CliCommandResult execute(String input, UIController controller) throws InterruptedException {
       if (!input.matches(REGEX))
          return new CliCommandResult(false, "Wrong Syntax of command " + name);
 
@@ -34,7 +33,12 @@ public class ReadConnectionsCommand extends CliCommand<UIController> {
          return new CliCommandResult(false, e.getMessage());
       }
 
-      Collection<ConnectionDetails> result = controller.readConnectionDetailsOf(type);
+      Collection<ConnectionDetails> result;
+      try {
+         result = controller.readConnectionDetailsOf(type);
+      } catch (IOException e) {
+         return new CliCommandResult(true, "Could not read connection details from the server.\n" + e.getMessage());
+      }
       String typeString = type == ConnectionType.ALL ? "" : (type.getString() + " ");
       String output = "Total " + typeString + "connections: " + result.size() + "\n";
       for (ConnectionDetails connectionDetails : result)
