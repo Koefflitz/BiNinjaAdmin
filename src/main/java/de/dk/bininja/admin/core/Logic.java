@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import de.dk.bininja.net.Base64Connection;
 import de.dk.bininja.net.ConnectionDetails;
 import de.dk.bininja.net.ConnectionRefusedException;
-import de.dk.bininja.net.ConnectionRequest;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.AdminPacket;
 import de.dk.bininja.net.packet.admin.AdminPacket.AdminPacketType;
@@ -21,7 +20,6 @@ import de.dk.bininja.net.packet.admin.ReadBufferSizePacket;
 import de.dk.bininja.net.packet.admin.SetBufferSizePacket;
 import de.dk.util.channel.ChannelClosedException;
 import de.dk.util.net.ConnectionListener;
-import de.dk.util.net.ReadingException;
 import de.dk.util.net.Receiver;
 
 /**
@@ -30,8 +28,6 @@ import de.dk.util.net.Receiver;
  */
 public class Logic implements Receiver, ConnectionListener {
    private static final Logger LOGGER = LoggerFactory.getLogger(Logic.class);
-
-   private static final long CONNECT_TIMEOUT = 0;
 
    private final LogicController controller;
    private Base64Connection connection;
@@ -42,15 +38,10 @@ public class Logic implements Receiver, ConnectionListener {
       this.controller = controller;
    }
 
-   public void start(String host, int port) throws IOException, ConnectionRefusedException {
-      ConnectionRequest request = new ConnectionRequest(host, port);
-      try {
-         this.connection = request.request(ConnectionType.ADMIN, CONNECT_TIMEOUT);
-      } catch (InterruptedException e) {
-         throw new IOException("Interrupted while establishing connection", e);
-      }
+   public void connected(Base64Connection connection) throws IOException, ConnectionRefusedException {
+      this.connection = connection;
       connection.addListener(this);
-      connection.setReceiver(this);
+      connection.addReceiver(this);
    }
 
    public int countConnectedClients(ConnectionType connectionType) throws IOException,
@@ -117,13 +108,6 @@ public class Logic implements Receiver, ConnectionListener {
    public void closed() {
       controller.show("Verbindung zum Server verloren.");
       controller.exit();
-   }
-
-   @Override
-   public void readingError(ReadingException e) {
-      String msg = "An error occured while reading from the Server.";
-      LOGGER.error(msg, e);
-      controller.showError(msg);
    }
 
    public void close() throws InterruptedException {

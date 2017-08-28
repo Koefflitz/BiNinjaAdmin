@@ -3,6 +3,7 @@ package de.dk.bininja.admin.entrypoint;
 import static de.dk.bininja.admin.entrypoint.Argument.HOST;
 import static de.dk.bininja.admin.entrypoint.Option.PORT;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import de.dk.bininja.InvalidArgumentException;
 import de.dk.bininja.admin.controller.MasterControlProgram;
 import de.dk.bininja.admin.core.Logic;
 import de.dk.bininja.admin.ui.cli.AdminCli;
+import de.dk.bininja.opt.ParsedSecurityArguments;
 import de.dk.util.opt.ArgumentModel;
 import de.dk.util.opt.ArgumentParser;
 import de.dk.util.opt.ArgumentParserBuilder;
@@ -55,6 +57,8 @@ public class Entrypoint {
       for (Option opt : Option.values())
          opt.build(builder);
 
+      ParsedSecurityArguments.build(builder);
+
       ArgumentParser parser = builder.buildAndGet();
 
       if (parser.isHelp(args)) {
@@ -80,6 +84,18 @@ public class Entrypoint {
             throw new InvalidArgumentException("Invalid port: " + portString, e);
          }
          arguments.setPort(port);
+      }
+
+      // security
+      ArgumentModel securityResult = result.getCommandValue(ParsedSecurityArguments.NAME);
+      if (securityResult != null) {
+         ParsedSecurityArguments secArgs;
+         try {
+            secArgs = ParsedSecurityArguments.parse(securityResult);
+         } catch (IOException e) {
+            throw new ArgumentParseException("Error parsing the security args", e);
+         }
+         arguments.setSecurityArgs(secArgs);
       }
 
       return arguments;

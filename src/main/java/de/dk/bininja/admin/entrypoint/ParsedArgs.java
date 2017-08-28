@@ -2,6 +2,8 @@ package de.dk.bininja.admin.entrypoint;
 
 import java.util.OptionalInt;
 
+import de.dk.bininja.opt.ParsedSecurityArguments;
+
 /**
  * @author David Koettlitz
  * <br>Erstellt am 07.08.2017
@@ -9,6 +11,7 @@ import java.util.OptionalInt;
 public class ParsedArgs {
    private String host;
    private int port = -1;
+   private ParsedSecurityArguments secArgs;
 
    public ParsedArgs() {
 
@@ -28,5 +31,17 @@ public class ParsedArgs {
 
    public void setPort(int port) {
       this.port = port;
+   }
+
+   public ParsedSecurityArguments getSecurityArgs() {
+      return secArgs;
+   }
+
+   public void setSecurityArgs(ParsedSecurityArguments secArgs) {
+      this.secArgs = secArgs;
+   }
+
+   public boolean isSecure() {
+      return secArgs != null;
    }
 }
