@@ -1,4 +1,4 @@
-package de.dk.bininja.admin.entrypoint;
+package de.dk.bininja.admin.opt;
 
 import de.dk.bininja.net.Base64Connection;
 import de.dk.util.opt.ArgumentParserBuilder;
@@ -8,6 +8,7 @@ import de.dk.util.opt.ArgumentParserBuilder;
  * <br>Erstellt am 07.08.2017
  */
 public enum Option {
+   HOST('H', "host", "The host to connect to."),
    PORT('p', "port", "The port to connect on. Default is " + Base64Connection.PORT, true);
 
    private final char key;

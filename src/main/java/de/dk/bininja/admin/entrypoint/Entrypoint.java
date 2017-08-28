@@ -1,22 +1,14 @@
 package de.dk.bininja.admin.entrypoint;
 
-import static de.dk.bininja.admin.entrypoint.Argument.HOST;
-import static de.dk.bininja.admin.entrypoint.Option.PORT;
-
-import java.io.IOException;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.dk.bininja.InvalidArgumentException;
 import de.dk.bininja.admin.controller.MasterControlProgram;
 import de.dk.bininja.admin.core.Logic;
+import de.dk.bininja.admin.opt.ParsedArgs;
 import de.dk.bininja.admin.ui.cli.AdminCli;
-import de.dk.bininja.opt.ParsedSecurityArguments;
-import de.dk.util.opt.ArgumentModel;
-import de.dk.util.opt.ArgumentParser;
-import de.dk.util.opt.ArgumentParserBuilder;
 import de.dk.util.opt.ex.ArgumentParseException;
 
 /**
@@ -30,10 +22,10 @@ public class Entrypoint {
 
    }
 
-   public static void main(String[] args) {
+   public static void main(String... args) {
       ParsedArgs parsedArgs;
       try {
-         parsedArgs = parseArguments(args);
+         parsedArgs = ParsedArgs.parse(args);
       } catch (ArgumentParseException e) {
          String argsString = Stream.<String>of(args)
                                    .reduce((a, b) -> a + " " + b)
@@ -46,59 +38,6 @@ public class Entrypoint {
 
       MasterControlProgram mcp = new MasterControlProgram();
       mcp.start(new Logic(mcp), new AdminCli(mcp), parsedArgs);
-   }
-
-   private static ParsedArgs parseArguments(String... args) throws ArgumentParseException {
-      LOGGER.debug("Parsing arguments");
-      ArgumentParserBuilder builder = new ArgumentParserBuilder();
-      for (Argument arg : Argument.values())
-         arg.build(builder);
-
-      for (Option opt : Option.values())
-         opt.build(builder);
-
-      ParsedSecurityArguments.build(builder);
-
-      ArgumentParser parser = builder.buildAndGet();
-
-      if (parser.isHelp(args)) {
-         parser.printUsage(System.out);
-         System.exit(0);
-      }
-      ArgumentModel result = parser.parseArguments(args);
-      ParsedArgs arguments = new ParsedArgs();
-
-      // host
-      result.getOptionalArgumentValue(HOST.getName())
-            .ifPresent(arguments::setHost);
-
-      // port
-      if (result.isOptionPresent(PORT.getKey())) {
-         String portString = result.getOptionValue(PORT.getKey());
-         int port;
-         try {
-            port = Integer.parseInt(portString);
-            if (port < 0 || port > 0xffff)
-               throw new InvalidArgumentException("Invalid port: " + portString);
-         } catch (NumberFormatException e) {
-            throw new InvalidArgumentException("Invalid port: " + portString, e);
-         }
-         arguments.setPort(port);
-      }
-
-      // security
-      ArgumentModel securityResult = result.getCommandValue(ParsedSecurityArguments.NAME);
-      if (securityResult != null) {
-         ParsedSecurityArguments secArgs;
-         try {
-            secArgs = ParsedSecurityArguments.parse(securityResult);
-         } catch (IOException e) {
-            throw new ArgumentParseException("Error parsing the security args", e);
-         }
-         arguments.setSecurityArgs(secArgs);
-      }
-
-      return arguments;
    }
 
 }

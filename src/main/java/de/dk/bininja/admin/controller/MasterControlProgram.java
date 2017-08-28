@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.admin.core.Logic;
 import de.dk.bininja.admin.core.LogicController;
-import de.dk.bininja.admin.entrypoint.ParsedArgs;
+import de.dk.bininja.admin.opt.ParsedArgs;
 import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.net.Base64Connection;
