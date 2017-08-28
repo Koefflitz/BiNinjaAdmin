@@ -49,7 +49,7 @@ public class ParsedArgs {
       ParsedArgs arguments = new ParsedArgs();
 
       // host
-      result.getOptionalArgumentValue(Option.HOST.getName())
+      result.getOptionalValue(Option.HOST.getKey())
             .ifPresent(arguments::setHost);
 
       // port

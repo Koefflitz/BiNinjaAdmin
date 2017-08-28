@@ -30,7 +30,7 @@ import de.dk.util.net.security.SessionKeyArrangement;
 public class MasterControlProgram implements LogicController, UIController, SessionKeyBuilder {
    private static final Logger LOGGER = LoggerFactory.getLogger(MasterControlProgram.class);
 
-   private static final long CONNECT_TIMEOUT = 0;
+   private static final long CONNECT_TIMEOUT = 8000;
 
    private Logic processor;
    private UI ui;
@@ -69,6 +69,7 @@ public class MasterControlProgram implements LogicController, UIController, Sess
 
    @Override
    public void connect(String host, int port) throws IOException, ConnectionRefusedException {
+      ui.show("Connecting to %s:%s", host, port);
       ConnectionRequest request = new ConnectionRequest(host, port);
       if (isSecure())
          request.setCrypterBuilder(this);
@@ -85,6 +86,9 @@ public class MasterControlProgram implements LogicController, UIController, Sess
 
    @Override
    public SecretKey buildSessionKey(SessionKeyArrangement builder) throws IOException {
+      if (keys == null)
+         return null;
+
       return builder.setGenerateSessionKey(true)
                     .setPublicKey(keys.getPublic())
                     .arrange();

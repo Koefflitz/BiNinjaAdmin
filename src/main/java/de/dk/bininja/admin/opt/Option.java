@@ -8,7 +8,7 @@ import de.dk.util.opt.ArgumentParserBuilder;
  * <br>Erstellt am 07.08.2017
  */
 public enum Option {
-   HOST('H', "host", "The host to connect to."),
+   HOST('H', "host", "The host to connect to.", true),
    PORT('p', "port", "The port to connect on. Default is " + Base64Connection.PORT, true);
 
    private final char key;
