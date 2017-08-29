@@ -34,6 +34,8 @@ public class Logic implements Receiver, ConnectionListener {
 
    private AdminPacket result;
 
+   private boolean exiting;
+
    public Logic(LogicController controller) {
       this.controller = controller;
    }
@@ -85,6 +87,8 @@ public class Logic implements Receiver, ConnectionListener {
 
       wait();
 
+      LOGGER.debug("Answer to " + request + " received: " + result);
+
       if (result == null || result.getType() != request.getType() || !resultType.isAssignableFrom(result.getClass()))
          throw new IOException("The received answer " + result + " did not match the request " + request);
 
@@ -106,6 +110,9 @@ public class Logic implements Receiver, ConnectionListener {
 
    @Override
    public void closed() {
+      if (exiting)
+         return;
+
       controller.show("Verbindung zum Server verloren.");
       controller.exit();
    }
@@ -114,8 +121,10 @@ public class Logic implements Receiver, ConnectionListener {
       if (connection == null)
          return;
 
+      exiting = true;
+
       connection.removeListener(this);
-      if (connection.isRunning()) {
+      if (!connection.isClosed()) {
          LOGGER.debug("Closing the connection to the server");
          try {
             connection.close(0);
@@ -123,5 +132,6 @@ public class Logic implements Receiver, ConnectionListener {
             LOGGER.warn("Error closing the connection " + connection, e);
          }
       }
+      exiting = false;
    }
 }

@@ -42,7 +42,7 @@ public class MasterControlProgram implements LogicController, UIController, Sess
    }
 
    public void start(Logic processor, UI ui, ParsedArgs args) {
-      LOGGER.debug("BiNinjaAdmin tool initialized and ready for action.");
+      LOGGER.debug("BiNinja-Admin starting up.");
       this.processor = processor;
       this.ui = ui;
 
@@ -69,6 +69,7 @@ public class MasterControlProgram implements LogicController, UIController, Sess
 
    @Override
    public void connect(String host, int port) throws IOException, ConnectionRefusedException {
+      LOGGER.info("Connecting to " + host + ":" + port);
       ui.show("Connecting to %s:%s", host, port);
       ConnectionRequest request = new ConnectionRequest(host, port);
       if (isSecure())
@@ -82,12 +83,17 @@ public class MasterControlProgram implements LogicController, UIController, Sess
       }
       processor.connected(connection);
       ui.setConnected(true);
+      LOGGER.info("Successfully connected to " + host + ":" + port);
    }
 
    @Override
    public SecretKey buildSessionKey(SessionKeyArrangement builder) throws IOException {
-      if (keys == null)
+      if (keys == null) {
+         LOGGER.debug("No public key set. Cannot generate session key.");
          return null;
+      }
+
+      LOGGER.debug("Generating the session key.");
 
       return builder.setGenerateSessionKey(true)
                     .setPublicKey(keys.getPublic())
@@ -125,7 +131,7 @@ public class MasterControlProgram implements LogicController, UIController, Sess
 
    @Override
    public void exit() {
-      LOGGER.debug("Exiting the BiNinja admintool.");
+      LOGGER.debug("Exiting the application.");
       try {
          processor.close();
       } catch (InterruptedException e) {

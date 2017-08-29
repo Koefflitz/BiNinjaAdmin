@@ -36,6 +36,8 @@ public class Entrypoint {
          return;
       }
 
+      LOGGER.debug("Arguments successfully parsed.");
+
       MasterControlProgram mcp = new MasterControlProgram();
       mcp.start(new Logic(mcp), new AdminCli(mcp), parsedArgs);
    }
