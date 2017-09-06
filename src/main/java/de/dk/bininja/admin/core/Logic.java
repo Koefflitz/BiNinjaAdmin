@@ -7,13 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.dk.bininja.net.Base64Connection;
-import de.dk.bininja.net.ConnectionDetails;
+import de.dk.bininja.net.ConnectionMetadata;
 import de.dk.bininja.net.ConnectionRefusedException;
 import de.dk.bininja.net.ConnectionType;
 import de.dk.bininja.net.packet.admin.AdminPacket;
 import de.dk.bininja.net.packet.admin.AdminPacket.AdminPacketType;
 import de.dk.bininja.net.packet.admin.BooleanAnswerPacket;
-import de.dk.bininja.net.packet.admin.ConnectionDetailsPacket;
+import de.dk.bininja.net.packet.admin.ConnectionMetaPacket;
 import de.dk.bininja.net.packet.admin.CountConnectionsPacket;
 import de.dk.bininja.net.packet.admin.CountConnectionsResultPacket;
 import de.dk.bininja.net.packet.admin.ReadBufferSizePacket;
@@ -53,10 +53,10 @@ public class Logic implements Receiver, ConnectionListener {
       return result.getCount();
    }
 
-   public Collection<ConnectionDetails> readConnectionDetailsOf(ConnectionType type) throws IOException,
+   public Collection<ConnectionMetadata> readConnectionDetailsOf(ConnectionType type) throws IOException,
                                                                                             InterruptedException {
-      ConnectionDetailsPacket result = request(new ConnectionDetailsPacket(type),
-                                               ConnectionDetailsPacket.class);
+      ConnectionMetaPacket result = request(new ConnectionMetaPacket(type),
+                                               ConnectionMetaPacket.class);
       return result.getConnectionDetails();
    }
 

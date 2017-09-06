@@ -15,7 +15,7 @@ import de.dk.bininja.admin.opt.ParsedArgs;
 import de.dk.bininja.admin.ui.UI;
 import de.dk.bininja.admin.ui.UIController;
 import de.dk.bininja.net.Base64Connection;
-import de.dk.bininja.net.ConnectionDetails;
+import de.dk.bininja.net.ConnectionMetadata;
 import de.dk.bininja.net.ConnectionRefusedException;
 import de.dk.bininja.net.ConnectionRequest;
 import de.dk.bininja.net.ConnectionType;
@@ -110,7 +110,7 @@ public class MasterControlProgram implements LogicController, UIController, Sess
    }
 
    @Override
-   public Collection<ConnectionDetails> readConnectionDetailsOf(ConnectionType type) throws IOException, InterruptedException {
+   public Collection<ConnectionMetadata> readConnectionDetailsOf(ConnectionType type) throws IOException, InterruptedException {
       return processor.readConnectionDetailsOf(type);
    }
 
