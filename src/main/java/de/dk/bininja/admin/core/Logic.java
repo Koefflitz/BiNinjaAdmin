@@ -18,7 +18,7 @@ import de.dk.bininja.net.packet.admin.CountConnectionsPacket;
 import de.dk.bininja.net.packet.admin.CountConnectionsResultPacket;
 import de.dk.bininja.net.packet.admin.ReadBufferSizePacket;
 import de.dk.bininja.net.packet.admin.SetBufferSizePacket;
-import de.dk.util.channel.ChannelClosedException;
+import de.dk.util.net.Connection;
 import de.dk.util.net.ConnectionListener;
 import de.dk.util.net.Receiver;
 
@@ -78,12 +78,7 @@ public class Logic implements Receiver, ConnectionListener {
    @SuppressWarnings("unchecked")
    private synchronized <P> P request(AdminPacket request, Class<P> resultType) throws IOException, InterruptedException {
       LOGGER.debug("Sending " + request + " to the server and wait...");
-      try {
-         connection.send(request);
-      } catch (ChannelClosedException | IllegalArgumentException e) {
-         LOGGER.error("Error sending adminpacket " + request + " to the server.", e);
-         throw new IOException(e);
-      }
+      connection.send(request);
 
       wait();
 
@@ -109,7 +104,7 @@ public class Logic implements Receiver, ConnectionListener {
    }
 
    @Override
-   public void closed() {
+   public void closed(Connection connection) {
       if (exiting)
          return;
 
