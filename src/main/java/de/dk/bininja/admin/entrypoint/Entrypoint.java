@@ -9,7 +9,7 @@ import de.dk.bininja.admin.controller.MasterControlProgram;
 import de.dk.bininja.admin.core.Logic;
 import de.dk.bininja.admin.opt.ParsedArgs;
 import de.dk.bininja.admin.ui.cli.AdminCli;
-import de.dk.util.opt.ex.ArgumentParseException;
+import de.dk.opt.ex.ArgumentParseException;
 
 /**
  * @author David Koettlitz
